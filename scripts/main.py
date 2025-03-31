@@ -42,9 +42,9 @@ def main():
             os.environ["RECHARGE_NOTIFY"] = str(options.get("RECHARGE_NOTIFY", "false")).lower()
             os.environ["BALANCE"] = str(options.get("BALANCE", 5.0))
             os.environ["PUSHPLUS_TOKEN"] = options.get("PUSHPLUS_TOKEN", "")
-            logging.info(f"当前以Homeassistant Add-on 形式运行.")
+            logging.info(f"当前以HA Add-on 形式运行.")
         except Exception as e:
-            logging.error(f"Failing to read the options.json file, the program will exit with an error message: {e}.")
+            logging.error(f"无法读取options.json文件，程序将退出并显示错误消息: {e}.")
             sys.exit()
     else:
         try:
@@ -62,15 +62,15 @@ def main():
             logging.error(f"Failing to read the .env file, the program will exit with an error message: {e}.")
             sys.exit()
 
-    logging.info(f"The current repository version is {VERSION}, and the repository address is https://github.com/ARC-MX/sgcc_electricity_new.git")
+    logging.info(f"当前存储库版本为 {VERSION}, 存储库地址为 https://github.com/nkdns/sgcc_electricity_new.git")
     current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    logging.info(f"The current date is {current_datetime}.")
+    logging.info(f"当前日期为 {current_datetime}.")
 
     fetcher = DataFetcher(PHONE_NUMBER, PASSWORD)
-    logging.info(f"The current logged-in user name is {PHONE_NUMBER}, the homeassistant address is {HASS_URL}, and the program will be executed every day at {JOB_START_TIME}.")
+    logging.info(f"当前登录的用户名为 {PHONE_NUMBER}, HA地址为 {HASS_URL}, 程序将每天在 {JOB_START_TIME} 运行.")
 
     next_run_time = datetime.strptime(JOB_START_TIME, "%H:%M") + timedelta(hours=12)
-    logging.info(f'Run job now! The next run will be at {JOB_START_TIME} and {next_run_time.strftime("%H:%M")} every day')
+    logging.info(f'开始运行！下一次运行将在每天的 {JOB_START_TIME} 和 {next_run_time.strftime("%H:%M")} 两个时间点')
     schedule.every().day.at(JOB_START_TIME).do(run_task, fetcher)
     schedule.every().day.at(next_run_time.strftime("%H:%M")).do(run_task, fetcher)
     run_task(fetcher)
@@ -86,7 +86,7 @@ def run_task(data_fetcher: DataFetcher):
             data_fetcher.fetch()
             return
         except Exception as e:
-            logging.error(f"state-refresh task failed, reason is [{e}], {RETRY_TIMES_LIMIT - retry_times} retry times left.")
+            logging.error(f"状态刷新任务失败，原因为 [{e}], 剩余 {RETRY_TIMES_LIMIT - retry_times} 次重试")
             continue
 
 def logger_init(level: str):

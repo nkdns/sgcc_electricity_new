@@ -492,20 +492,20 @@ class DataFetcher:
             target = driver.find_element(By.CLASS_NAME, "total")
             WebDriverWait(driver, self.DRIVER_IMPLICITY_WAIT_TIME).until(EC.visibility_of(target))
         except Exception as e:
-            logging.error(f"The yearly data get failed : {e}")
+            logging.error(f"年度数据获取失败 : {e}")
             return None, None
 
         # get data
         try:
             yearly_usage = driver.find_element(By.XPATH, "//ul[@class='total']/li[1]/span").text
         except Exception as e:
-            logging.error(f"The yearly_usage data get failed : {e}")
+            logging.error(f"获取年度使用电量数据失败 : {e}")
             yearly_usage = None
 
         try:
             yearly_charge = driver.find_element(By.XPATH, "//ul[@class='total']/li[2]/span").text
         except Exception as e:
-            logging.error(f"The yearly_charge data get failed : {e}")
+            logging.error(f"年度费用数据获取失败 : {e}")
             yearly_charge = None
 
         return yearly_usage, yearly_charge

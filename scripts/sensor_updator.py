@@ -32,7 +32,7 @@ class SensorUpdator:
         if month_charge is not None:
             self.update_month_data(postfix, month_charge)
 
-        logging.info(f"User {user_id} state-refresh task run successfully!")
+        logging.info(f"户号 {user_id} 状态刷新任务运行成功!")
 
     def update_last_daily_usage(self, postfix: str, last_daily_date: str, sensorState: float):
         sensorName = DAILY_USAGE_SENSOR_NAME + postfix
@@ -52,7 +52,7 @@ class SensorUpdator:
         }
 
         self.send_url(sensorName, request_body)
-        logging.info(f"Homeassistant sensor {sensorName} state updated: {sensorState} kWh")
+        logging.info(f"HA传感器 {sensorName} 状态更新: {sensorState} kWh")
 
     def update_balance(self, postfix: str, sensorState: float):
         sensorName = BALANCE_SENSOR_NAME + postfix
@@ -71,7 +71,7 @@ class SensorUpdator:
         }
 
         self.send_url(sensorName, request_body)
-        logging.info(f"Homeassistant sensor {sensorName} state updated: {sensorState} CNY")
+        logging.info(f"HA传感器 {sensorName} 状态更新: {sensorState} CNY")
 
     def update_month_data(self, postfix: str, sensorState: float, usage=False):
         sensorName = (
@@ -95,7 +95,7 @@ class SensorUpdator:
         }
 
         self.send_url(sensorName, request_body)
-        logging.info(f"Homeassistant sensor {sensorName} state updated: {sensorState} {'kWh' if usage else 'CNY'}")
+        logging.info(f"HA传感器 {sensorName} 状态更新: {sensorState} {'kWh' if usage else 'CNY'}")
 
     def update_yearly_data(self, postfix: str, sensorState: float, usage=False):
         sensorName = (
@@ -118,7 +118,7 @@ class SensorUpdator:
             },
         }
         self.send_url(sensorName, request_body)
-        logging.info(f"Homeassistant sensor {sensorName} state updated: {sensorState} {'kWh' if usage else 'CNY'}")
+        logging.info(f"HA传感器 {sensorName} 状态更新: {sensorState} {'kWh' if usage else 'CNY'}")
 
     def send_url(self, sensorName, request_body):
         headers = {
@@ -129,10 +129,10 @@ class SensorUpdator:
         try:
             response = requests.post(url, json=request_body, headers=headers)
             logging.debug(
-                f"Homeassistant REST API invoke, POST on {url}. response[{response.status_code}]: {response.content}"
+                f"HA接口调用, POST on {url}. response[{response.status_code}]: {response.content}"
             )
         except Exception as e:
-            logging.error(f"Homeassistant REST API invoke failed, reason is {e}")
+            logging.error(f"HA接口调用失败, reason is {e}")
 
     def balance_notify(self, user_id, balance):
 
