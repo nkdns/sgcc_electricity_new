@@ -3,7 +3,6 @@ import os
 from datetime import datetime,timedelta
 
 import requests
-from sympy import true
 
 from const import *
 
@@ -37,15 +36,18 @@ class SensorUpdator:
 
     def update_last_daily_usage(self, postfix: str, last_daily_date: str, sensorState: float):
         sensorName = DAILY_USAGE_SENSOR_NAME + postfix
+        date_obj = datetime.strptime(last_daily_date, "%Y-%m-%d")
+        next_day = date_obj + timedelta(days=1)
+        last_reset = next_day.isoformat()
         request_body = {
             "state": sensorState,
             "unique_id": sensorName,
             "attributes": {
-                "last_reset": last_daily_date,
+                "last_reset": last_reset,
                 "unit_of_measurement": "kWh",
                 "icon": "mdi:lightning-bolt",
                 "device_class": "energy",
-                "state_class": "measurement",
+                "state_class": "total",
             },
         }
 
@@ -54,7 +56,8 @@ class SensorUpdator:
 
     def update_balance(self, postfix: str, sensorState: float):
         sensorName = BALANCE_SENSOR_NAME + postfix
-        last_reset = datetime.now().strftime("%Y-%m-%d, %H:%M:%S")
+        today_midnight = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        last_reset = today_midnight.isoformat()
         request_body = {
             "state": sensorState,
             "unique_id": sensorName,
@@ -76,10 +79,9 @@ class SensorUpdator:
             if usage
             else MONTH_CHARGE_SENSOR_NAME + postfix
         )
-        current_date = datetime.now()
-        first_day_of_current_month = current_date.replace(day=1)
-        last_day_of_previous_month = first_day_of_current_month - timedelta(days=1)
-        last_reset = last_day_of_previous_month.strftime("%Y-%m")
+        now = datetime.now()
+        first_of_month = datetime(now.year, now.month, 1, 0, 0, 0)
+        last_reset = first_of_month.isoformat()
         request_body = {
             "state": sensorState,
             "unique_id": sensorName,
@@ -88,7 +90,7 @@ class SensorUpdator:
                 "unit_of_measurement": "kWh" if usage else "CNY",
                 "icon": "mdi:lightning-bolt" if usage else "mdi:cash",
                 "device_class": "energy" if usage else "monetary",
-                "state_class": "measurement",
+                "state_class": "total",
             },
         }
 
@@ -101,11 +103,9 @@ class SensorUpdator:
             if usage
             else YEARLY_CHARGE_SENSOR_NAME + postfix
         )
-        if datetime.now().month == 1:
-            last_year = datetime.now().year -1 
-            last_reset = datetime.now().replace(year=last_year).strftime("%Y")
-        else:
-            last_reset = datetime.now().strftime("%Y")
+        current_year = datetime.now().year
+        new_year = datetime(current_year, 1, 1, 0, 0, 0)
+        last_reset = new_year.isoformat()
         request_body = {
             "state": sensorState,
             "unique_id": sensorName,
@@ -114,7 +114,7 @@ class SensorUpdator:
                 "unit_of_measurement": "kWh" if usage else "CNY",
                 "icon": "mdi:lightning-bolt" if usage else "mdi:cash",
                 "device_class": "energy" if usage else "monetary",
-                "state_class": "total_increasing",
+                "state_class": "total",
             },
         }
         self.send_url(sensorName, request_body)
