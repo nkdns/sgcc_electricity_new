@@ -15,15 +15,15 @@ map:
   - config:rw
 options:
   PHONE_NUMBER: ""
-  PASSWORD: ""  
+  PASSWORD: ""
   IGNORE_USER_ID: "xxxx,xxxx"
   ENABLE_DATABASE_STORAGE: false
   DB_NAME: "homeassistant.db"
   HASS_URL: "http://homeassistant.local:8123/"
   HASS_TOKEN: ""
-  JOB_START_TIME: "07:00"
+  JOB_START_TIME: "03:00"
   RETRY_WAIT_TIME_OFFSET_UNIT: 15
-  DATA_RETENTION_DAYS: 7
+  DATA_RETENTION_DAYS: 30
   RECHARGE_NOTIFY: false
   BALANCE: 5.0
   PUSHPLUS_TOKEN: "xxxx,xxxx"
@@ -38,6 +38,6 @@ schema:
   JOB_START_TIME: str
   RETRY_WAIT_TIME_OFFSET_UNIT: int(2,30)
   DATA_RETENTION_DAYS: int
-  RECHARGE_NOTIFY: bool 
-  BALANCE: float 
+  RECHARGE_NOTIFY: bool
+  BALANCE: float
   PUSHPLUS_TOKEN: str
